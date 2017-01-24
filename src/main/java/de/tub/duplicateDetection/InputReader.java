@@ -1,8 +1,15 @@
 package de.tub.duplicateDetection;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,22 +26,29 @@ public class InputReader {
     }
 
     List<Row> readFile() throws IOException {
-          return Files.lines(Paths.get(path))
-                  .skip(1)
-                  .map(line->{
-                      return line.split(",");
-                  })
-                  .map(items->{
-                        switch (items.length){
-                            case 11:  return new Row(items[0],items[1],items[2],items[3],items[4],items[5],items[6],items[7],items[8],items[9],items[10],"");
-                            case 12:  return new Row(items[0],items[1],items[2],items[3],items[4],items[5],items[6],items[7],items[8],items[9],items[10],items[11]);
-                            case 13:  return new Row(items[0],items[1],items[2],items[3],items[4],items[5],items[6],items[7],items[8],items[9],items[10],items[11]);
-                        }
-                        System.out.println(items.length + "   " + Arrays.toString(items));
-                        return null;
-                     })
-                  .filter(x->x!=null)
-                  .collect(Collectors.toList());
+        File csvData = new File(path);
+        CSVFormat csvFormat = CSVFormat.newFormat(',')
+                .withQuote('"')
+                .withHeader();
+        CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), csvFormat);
 
+        List<Row> list = new ArrayList<>();
+        parser.forEach(item -> {
+
+            Row row = new Row(item.get("RecID(String)"), item.get("FirstName(String)"), item.get("MiddleName(String)"), item.get("LastName(String)"),
+                    item.get("Address(String)"),
+                    item.get("City(String)"),
+                    item.get("State"),
+                    item.get("ZIP"),
+                    item.get("POBox(String)"),
+                    item.get("POCityStateZip(String)"),
+                    item.get("SSN(String)"),
+                    item.get("DOB(String)"));
+
+            list.add(row);
+
+        });
+
+        return list;
     }
 }

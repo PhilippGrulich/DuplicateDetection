@@ -16,8 +16,10 @@ public class Row {
     public final String POCityStateZip;
     public final String SSN;
     public final String DOB;
+    public int ClusterID;
 
     public Row(String recID, String firstName, String middleName, String lastName, String address, String city, String state, String ZIP, String POBox, String POCityStateZip, String SSN, String DOB) {
+
         RecID = recID;
         FirstName = firstName;
         MiddleName = middleName;
@@ -30,6 +32,21 @@ public class Row {
         this.POCityStateZip = POCityStateZip;
         this.SSN = SSN;
         this.DOB = DOB;
+    }
+
+    public Row(Row p) {
+        this.RecID = p.RecID;
+        this.FirstName = p.FirstName;
+        this.MiddleName = p.MiddleName;
+        this.LastName = p.LastName;
+        this.Address = p.Address;
+        this.City = p.City;
+        this.State = p.State;
+        this.ZIP = p.ZIP;
+        this.POBox = p.POBox;
+        this.POCityStateZip = p.POCityStateZip;
+        this.SSN = p.SSN;
+        this.DOB = p.DOB;
     }
 
     @Override
